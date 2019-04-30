@@ -4,6 +4,12 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
+kapt {
+    generateStubs = true
+}
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -22,8 +28,20 @@ android {
     }
 }
 
+sourceSets {
+    main {
+        java {
+            srcDir "${buildDir.absolutePath}/tmp/kapt/main/kotlinGenerated/"
+        }
+    }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    annotationProcessor project(":Generator")
+    kapt project(":Generator")
+    compileOnly project(":Generator")
+
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.core:core-ktx:1.0.1'
